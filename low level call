@@ -1,0 +1,60 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+contract Encoder {
+
+    uint public num1 = 0;
+    uint public num2 = 1;
+
+    function encode(string memory name) public pure returns(bytes memory){
+        return abi.encode(name);
+    }
+
+    function decode (bytes memory hashs) public pure  returns(string memory)
+    {
+        return abi.decode(hashs, (string));
+    }
+
+    function encodePack(string memory name) public pure returns(bytes memory){
+        return abi.encodePacked(name);
+    }
+
+    function sumNumberss(uint num3) public  {
+        num2 = num2 + num3 ;
+    }
+//  here on endoerr
+    function setNum(uint num) public {
+        num1 = num;
+    }
+
+    function setSumEncode() public {
+        (bool success, bytes memory data) = address(this).call(abi.encodeWithSignature("sumNumbers(uint256)", 6));
+
+    }
+
+    function encodewithSig(string memory name) public  returns(bytes memory){
+        (bool success, bytes memory data) = address(this).call(abi.encodeWithSignature("encode(string)", name));
+        return data;
+    }
+
+    function sumNumbers(uint num) public{
+        num1 =num1 + num;
+    } 
+
+    
+    
+}
+
+contract B {
+
+    function attack(address encoder) public  {
+        (bool success,) = encoder.call(abi.encodeWithSignature("setNum(uint256)", 1000));
+    }
+
+    function attackNum(address encoder) public {
+        (bool success,) = encoder.call(abi.encodeWithSignature("sumNumbers(uint256)", type(uint256).max));
+        
+    }
+
+    // delegatecall, statiscall , call
+}
